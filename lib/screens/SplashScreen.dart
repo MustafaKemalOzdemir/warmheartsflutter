@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:warm_hearts_flutter/screens/HomeScreen.dart';
+import 'package:warm_hearts_flutter/screens/BottomNavigationPage.dart';
 
 class SplashScreen extends StatelessWidget {
   static BuildContext myContext;
@@ -10,7 +10,7 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future.delayed(Duration(seconds: 1), (){
-      Navigator.of(myContext).push(PageTransition(child: HomeScreen(), type: PageTransitionType.rightToLeft));
+      Navigator.of(myContext).push(PageTransition(child: BottomNavigationPage(), type: PageTransitionType.rightToLeft));
     });
 
     return MaterialApp(
