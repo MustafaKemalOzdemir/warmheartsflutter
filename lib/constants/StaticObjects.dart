@@ -9,5 +9,6 @@ class StaticObjects{
 
   static bool loginStatus = false;
   static User userData;
+  static String accessToken;
 
 }

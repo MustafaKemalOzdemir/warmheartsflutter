@@ -2,23 +2,38 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:warm_hearts_flutter/data/CallManager.dart';
+import 'package:warm_hearts_flutter/screens/BottomNavigationPage.dart';
 import 'package:warm_hearts_flutter/screens/TabLoginPage.dart';
 
 class SplashScreen extends StatefulWidget {
-
-
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  CallManager _callManager = CallManager();
+  int _dataCount = 0;
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 1), (){
-      //Navigator.of(myContext).push(PageTransition(child: BottomNavigationPage(), type: PageTransitionType.rightToLeft));
-      Navigator.of(context).pushReplacement(PageTransition(child: TabLoginPage(), type: PageTransitionType.rightToLeft));
+
+    _callManager.getUsers().then((value){
+      _dataCount++;
     });
+
+    _callManager.getMissing();
+    dataCheck();
+  }
+
+  void dataCheck(){
+    if(_dataCount == 1){
+      Navigator.of(context).pushReplacement(PageTransition(child: BottomNavigationPage(), type: PageTransitionType.rightToLeft));
+    }else{
+      Future.delayed(Duration(milliseconds: 100), (){
+        dataCheck();
+      });
+    }
   }
   @override
   Widget build(BuildContext context) {

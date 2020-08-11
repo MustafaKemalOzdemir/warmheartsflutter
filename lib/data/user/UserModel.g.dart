@@ -10,6 +10,7 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) {
   return UserModel(
     json['success'] as bool,
     json['message'] as String,
+    json['token'] as String,
     json['user'] == null
         ? null
         : User.fromJson(json['user'] as Map<String, dynamic>),
@@ -19,5 +20,6 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'success': instance.success,
       'message': instance.message,
+      'token': instance.token,
       'user': instance.user,
     };

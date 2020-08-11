@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:warm_hearts_flutter/data/CallManager.dart';
+import 'package:warm_hearts_flutter/data/user/UserModel.dart';
 import 'package:warm_hearts_flutter/screens/BottomNavigationPage.dart';
 
 class TabLoginPage extends StatefulWidget {
@@ -14,6 +16,7 @@ class _TabLoginPageState extends State<TabLoginPage> {
   final FocusNode _passWordFocus = FocusNode();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final CallManager _callManager = CallManager();
   int _loginMode = 0;
   bool _hiddenPassword = true;
   bool _autoValidate = false;
@@ -290,18 +293,24 @@ class _TabLoginPageState extends State<TabLoginPage> {
     );
   }
 
-  void _handleSignUp(){
-    //todo signup codes here
-  }
-
-  void _handleAuth() {
-    //todo sign in codes here
-    if (_emailController.text.toLowerCase() == 'u@m.c' && _passwordController.text.toLowerCase() == '123456') {
-        Navigator.of(context).push(PageTransition(child: BottomNavigationPage(), type: PageTransitionType.rightToLeft));
-    } else {
-      Fluttertoast.showToast(msg: 'Check E-Mail and Password', toastLength: Toast.LENGTH_SHORT);
+  void _handleSignUp() async{
+    UserModel userModel = await _callManager.signUp(email: _emailController.text.toString().trim(), password: _passwordController.text.toString().trim());
+    if(userModel.success){
+      Navigator.of(context).pushAndRemoveUntil(PageTransition(child: BottomNavigationPage(), type: PageTransitionType.rightToLeft), (route) => false);
+    }else{
+      Fluttertoast.showToast(msg: userModel.message);
     }
   }
+
+  void _handleAuth() async{
+    UserModel userModel = await _callManager.signIn(email: _emailController.text.toString().trim(), password: _passwordController.text.toString().trim());
+    if(userModel.success){
+      Navigator.of(context).pushAndRemoveUntil(PageTransition(child: BottomNavigationPage(), type: PageTransitionType.rightToLeft), (route) => false);
+    }else{
+      Fluttertoast.showToast(msg: userModel.message);
+    }
+  }
+
 
 
   bool _validateEmail(String text) {
