@@ -394,7 +394,7 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    UserModel userModel = await _callManager.signIn(_emailController.text.toString(), _passwordController.text.toString());
+    UserModel userModel = await _callManager.signIn(email: _emailController.text.toString(), password: _passwordController.text.toString());
     if(userModel.success){
       setState(() {
         loginState = 0;
@@ -408,8 +408,6 @@ class _LoginPageState extends State<LoginPage> {
       });
       print(userModel.message);
     }
-
-
 
   }
 
