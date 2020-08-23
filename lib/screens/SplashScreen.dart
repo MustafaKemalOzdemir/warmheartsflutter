@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:warm_hearts_flutter/constants/StaticObjects.dart';
 import 'package:warm_hearts_flutter/data/CallManager.dart';
+import 'package:warm_hearts_flutter/data/DataManager.dart';
 import 'package:warm_hearts_flutter/screens/BottomNavigationPage.dart';
 import 'package:warm_hearts_flutter/screens/TabLoginPage.dart';
 
@@ -13,21 +15,39 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   CallManager _callManager = CallManager();
+  DataManager _dataManager = DataManager();
   int _dataCount = 0;
   @override
   void initState() {
     super.initState();
 
     _callManager.getUsers().then((value){
+      print('Users received');
+    });
+
+    _callManager.getCities().then((value){
+      StaticObjects.cityList = value;
       _dataCount++;
     });
 
-    _callManager.getMissing();
+    //_callManager.getMissing();
+    _callManager.getAnimalCategories().then((value){
+      _dataCount++;
+    });
+
+    _dataManager.readUser().then((value){
+      if(value != null){
+        StaticObjects.userData = value;
+        StaticObjects.accessToken = value.accessToken;
+        StaticObjects.loginStatus = true;
+      }
+      _dataCount++;
+    });
     dataCheck();
   }
 
   void dataCheck(){
-    if(_dataCount == 1){
+    if(_dataCount == 3){
       Navigator.of(context).pushReplacement(PageTransition(child: BottomNavigationPage(), type: PageTransitionType.rightToLeft));
     }else{
       Future.delayed(Duration(milliseconds: 100), (){

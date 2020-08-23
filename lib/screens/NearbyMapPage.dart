@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:warm_hearts_flutter/constants/StaticObjects.dart';
 
 class NearbyMapPage extends StatefulWidget {
   @override
@@ -10,7 +11,12 @@ class _NearbyMapPageState extends State<NearbyMapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text('This is NearbyMap Page'),
+        child: FlatButton(
+          child: Text('This is NearbyMap Page'),
+          onPressed: (){
+            StaticObjects.loginStatus = false;
+          },
+        ),
       ),
     );
   }

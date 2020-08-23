@@ -1,4 +1,6 @@
 
+import 'package:warm_hearts_flutter/data/animal_category/AnimalCategory.dart';
+import 'package:warm_hearts_flutter/data/city/CityItem.dart';
 import 'package:warm_hearts_flutter/data/user/User.dart';
 
 class StaticObjects{
@@ -10,5 +12,8 @@ class StaticObjects{
   static bool loginStatus = false;
   static User userData;
   static String accessToken;
+
+  static List<AnimalCategory> animalCategoryList = List();
+  static List<CityItem> cityList = List();
 
 }

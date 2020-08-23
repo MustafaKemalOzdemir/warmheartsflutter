@@ -12,7 +12,8 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      //backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.transparent,
       body: StaticObjects.loginStatus
           ? Center(
               child: Text('This is Profile Page'),
@@ -24,7 +25,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   SizedBox(
                     width: 140,
                     height: 140,
-                    child: Icon(Icons.account_circle, color: Colors.blue, size: 140),
+                    child: Icon(Icons.account_circle, color: Color(0xFF0367BD), size: 140),
                   ),
                   SizedBox(height: 20),
                   Text(
@@ -38,10 +39,14 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: MediaQuery.of(context).size.width * 0.65,
                     height: 35,
                     child: FlatButton(
-                      color: Colors.blue,
+                      color: Color(0xFF0367BD),
                       child: Text('Sign In', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),),
                       onPressed: () {
-                        Navigator.of(context).push(PageTransition(child: TabLoginPage(), type: PageTransitionType.rightToLeft));
+                        Navigator.of(context).push(PageTransition(child: TabLoginPage(modeOverlay: true,), type: PageTransitionType.rightToLeft)).then((value){
+                          setState(() {
+
+                          });
+                        });
                       },
                     ),
                   ),

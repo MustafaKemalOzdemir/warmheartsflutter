@@ -14,6 +14,7 @@ class _HomePageState extends State<HomePage> {
   Future<bool> _handleWillPop() async {
     return showDialog(
             context: context,
+            barrierDismissible: false,
             builder: (context) => AlertDialog(
                   contentPadding: EdgeInsets.only(top: 15, right: 10, left: 10),
                   content: Padding(
@@ -47,13 +48,19 @@ class _HomePageState extends State<HomePage> {
     return WillPopScope(
       onWillPop: _handleWillPop,
       child: Scaffold(
+        backgroundColor: Colors.transparent,
         appBar: AppBar(
-          title: Text('Home', style: TextStyle(color: Colors.grey[800])),
+          backgroundColor: Colors.transparent,
+          elevation: 1,
+          title: Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Text('Home', style: TextStyle(color: Colors.white)),
+          ),
           actions: <Widget>[
             Transform.rotate(
               angle: 5.6,
               child: IconButton(
-                icon: Icon(Icons.send, color: Colors.blue,),
+                icon: Icon(Icons.send, color: Colors.white,),
                 onPressed: () {},
               ),
             )

@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:warm_hearts_flutter/screens/SplashScreen.dart';
 
 void main() => runApp(MyApp());
@@ -19,6 +20,12 @@ class MyApp extends StatelessWidget {
               ),
             )
         ),
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate
+        ],
+        supportedLocales: [
+          const Locale('tr')
+        ],
         home: SplashScreen()
     );
   }
