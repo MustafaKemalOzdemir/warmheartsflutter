@@ -6,13 +6,20 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_map_location_picker/google_map_location_picker.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:warm_hearts_flutter/constants/StaticObjects.dart';
 import 'package:warm_hearts_flutter/data/CallManager.dart';
 import 'package:warm_hearts_flutter/data/animal_category/AnimalCategory.dart';
 import 'package:warm_hearts_flutter/data/animal_category/AnimalRace.dart';
 import 'package:warm_hearts_flutter/data/city/CityItem.dart';
 import 'package:warm_hearts_flutter/data/city/DistrictItem.dart';
+import 'package:warm_hearts_flutter/data/post/Adoption.dart';
+import 'package:warm_hearts_flutter/data/post/Mating.dart';
+import 'package:warm_hearts_flutter/data/post/Missing.dart';
+import 'package:warm_hearts_flutter/screens/PostDetailPage.dart';
 
 class CreateNewPostPage extends StatefulWidget {
   const CreateNewPostPage();
@@ -22,12 +29,23 @@ class CreateNewPostPage extends StatefulWidget {
 }
 
 class _CreateNewPostPageState extends State<CreateNewPostPage> {
+  FocusNode _focusNodePostTitle = FocusNode();
+  FocusNode _focusNodePostDescription = FocusNode();
+  TextEditingController _textEditingControllerPostTitle = TextEditingController();
+  TextEditingController _textEditingControllerPostDescription = TextEditingController();
+
+  GoogleMapController _googleMapController;
+  List<Marker> _markers = <Marker>[];
   final picker = ImagePicker();
   CallManager _callManager = CallManager();
   List<File> _imageList = List();
   int _stage = 0;
   int carouselIndex = 0;
   int selectedPostType = 0; /// 0 -> Adoptation 1 -> missing, 2 -> mating
+
+  //post info
+  String _postTitle;
+  String _postDescription;
 
   //animal info
   String _animalName;
@@ -43,8 +61,7 @@ class _CreateNewPostPageState extends State<CreateNewPostPage> {
   String _city;
   String _town;
   String _addressDetail;
-  double _latitude;
-  double _longitude;
+  LatLng _selectedPosition;
 
   //missing
   int _collar = -1;
@@ -115,16 +132,20 @@ class _CreateNewPostPageState extends State<CreateNewPostPage> {
   String _handleTitle(){
     if(_stage == 0){
       return 'Temel Bilgiler';
-    }else{
+    }else if(_stage == 1){
       return 'Fotograf ve adres bilgileri';
+    }else{
+      return 'İlan başlığı ve açıklaması';
     }
   }
 
   String _handleButtonTitle(){
     if(_stage == 0){
-      return 'Devam Et (1/2) ';
+      return 'Devam Et (1/3) ';
+    }else if(_stage == 1){
+      return 'Devam Et (2/3)';
     }else{
-      return 'Tamamla (2/2)';
+    return 'Ön İzlemeye Geç (3/3)';
     }
   }
 
@@ -212,13 +233,41 @@ class _CreateNewPostPageState extends State<CreateNewPostPage> {
                               setState(() {
                                 _stage = 1;
                               });
-                            }else{
+                            }else if(_stage == 1){
                               if(_validateSecondStage() == false){
                                 Fluttertoast.showToast(msg: 'Lütfen gerekli alanları doldurun ve en az 3 resim seçin');
                               }else{
-                                _callManager.createAdoptionPost(animalName: _animalName, age: _age,
-                                    animalType: _type, animalRace: _race, gender: _gender, source: _source,
-                                images: _imageList, regularVaccine: _regularVaccine, castrated: _castrated, city: _city, town: _town, addressDetail: _addressDetail);
+                                if(_selectedPosition == null){
+                                  Fluttertoast.showToast(msg: 'Lütfen harita üzerinden konum seçin');
+                                  return;
+                                }
+                                setState(() {
+                                  _stage = 2;
+                                });
+                              }
+                            }else{
+                              if(_validateThirdStage()){
+                                if(_postTitle.length < 2){
+                                  Fluttertoast.showToast(msg: 'İlan başlığı en az 3 kelime olmalıdır');
+                                  return;
+                                }
+                                if(_postDescription.length <= 29){
+                                  Fluttertoast.showToast(msg: 'İlan açıkmalası en az 30 kelime olmalıdır');
+                                  return;
+                                }
+                                Adoption adoption;
+                                Missing missing;
+                                Mating mating;
+                                if(selectedPostType == 0){
+                                  adoption = Adoption(null, null, null,_postTitle,_postDescription,_animalName,_castrated, _type, _race,_gender, _age,_source, _regularVaccine, _city, _town, _addressDetail, _selectedPosition.latitude, _selectedPosition.longitude,null);
+                                }else if(selectedPostType == 1){
+                                  missing = Missing(null, null, null,_postTitle,_postDescription,_animalName,_castrated, _type, _race,_gender, _age,_source, _regularVaccine, _city, _town, _addressDetail, _selectedPosition.latitude, _selectedPosition.longitude, _lostDate.millisecondsSinceEpoch.toString(), _collar, null);
+                                }else if(selectedPostType == 2){
+                                  mating = Mating(null, null, null,_postTitle,_postDescription,_animalName,_castrated, _type, _race,_gender, _age,_source, _regularVaccine, _city, _town, _addressDetail, _selectedPosition.latitude, _selectedPosition.longitude, _heat, null);
+                                }
+                                Navigator.of(context).push(PageTransition(child: PostDetailPage(postMode: selectedPostType, adoption: adoption, missing: missing, mating: mating,preview: true, imageList: _imageList), type: PageTransitionType.rightToLeft));
+                              }else{
+                                Fluttertoast.showToast(msg: 'Lütfen ilan başlığını ve açıklamasını kontrol edin');
                               }
                             }
                           },
@@ -270,6 +319,15 @@ class _CreateNewPostPageState extends State<CreateNewPostPage> {
     addressCheck+= (_town == null || _town == '') ? 0 : 1;
     addressCheck+= (_addressDetail == null || _addressDetail == '') ? 0 : 1;
     return addressCheck + _imageList.length == 6;
+  }
+
+  bool _validateThirdStage(){
+    int postInfoCheck = 0;
+    _postTitle = _textEditingControllerPostTitle.text.trim();
+    _postDescription = _textEditingControllerPostDescription.text.trim();
+    postInfoCheck+= (_postTitle == null || _postTitle == '') ? 0 : 1;
+    postInfoCheck+= (_postDescription == null || _postDescription == '') ? 0 : 1;
+    return postInfoCheck == 2;
   }
 
   List<Widget> _getCarouselChips(){
@@ -602,7 +660,7 @@ class _CreateNewPostPageState extends State<CreateNewPostPage> {
           )
         ],
       );
-    }else{
+    }else if(_stage == 1){
       return Column(
         children: <Widget>[
           Padding(
@@ -753,10 +811,215 @@ class _CreateNewPostPageState extends State<CreateNewPostPage> {
               });
             },
           ),
+          /*
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
+            child: GestureDetector(
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 10,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  color: Colors.green
+                ),
+                child: Center(child: Text('Konum Seç', style: TextStyle(color: Colors.white))),
+              ),
+              onTap: () async{
+                ///Location picker
+                LocationResult result = await showLocationPicker(context, 'AIzaSyBVzt9pJGzSxnxWztvNcj9VfV7XLPQGlQM');
+              },
+            ),
+          ),
+
+           */
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: 200,
+              child: GoogleMap(
+                mapType: MapType.normal,
+                initialCameraPosition: _initialCameraPosition,
+                markers: Set<Marker>.of(_markers),
+                onMapCreated: (GoogleMapController controller) {
+                  _googleMapController = controller;
+                },
+                onTap: (latLng) async{
+                  if(_googleMapController != null){
+                    LocationResult result = await showLocationPicker(context, 'AIzaSyBVzt9pJGzSxnxWztvNcj9VfV7XLPQGlQM');
+                    if(result != null){
+                      _selectedPosition = result.latLng;
+                      setState(() {
+                        _markers.clear();
+                        _markers.add(
+                          Marker(
+                            markerId: MarkerId('User Pos'),
+                            position: result.latLng
+                          )
+                        );
+                        _googleMapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: result.latLng, zoom: 12)));
+                      });
+                    } else{
+                      Fluttertoast.showToast(msg: 'Harita yüklenirken bir hata meydana geldi');
+                    }
+                  }
+                },
+              ),
+            ),
+          )
         ],
+      );
+    }else{
+      return SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height - 150,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(left: 10, bottom: 3),
+                child: Text('İlan Başlığı', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),),
+              ),
+              TextFormField(
+                style: TextStyle(fontSize: 17, color: Colors.grey[800]),
+                obscureText: false,
+                maxLines: 1,
+                maxLength: 15,
+                focusNode: _focusNodePostTitle,
+                controller: _textEditingControllerPostTitle,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                cursorColor: Color(0xff0367BD),
+                decoration: InputDecoration(
+                  counterStyle: TextStyle(color: Colors.white),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xff0367BD),
+                        width: 1.4,
+                      )
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.green, width: 0.5),
+                  ),
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  filled: true,
+                  fillColor: Colors.white,
+                ),
+                onSaved: (data){
+                  _postTitle = data;
+                },
+                onFieldSubmitted: (term) {
+                  _postTitle = term;
+                  _focusNodePostTitle.unfocus();
+                  FocusScope.of(context).requestFocus(_focusNodePostDescription);
+                },
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 10, bottom: 3),
+                child: Text('İlan Açıklaması', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),),
+              ),
+              TextFormField(
+                style: TextStyle(fontSize: 17, color: Colors.grey[800]),
+                obscureText: false,
+                minLines: 5,
+                maxLines: 20,
+                maxLength: 200,
+                focusNode: _focusNodePostDescription,
+                controller: _textEditingControllerPostDescription,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.done,
+                cursorColor: Color(0xff0367BD),
+                decoration: InputDecoration(
+                  counterStyle: TextStyle(color: Colors.white),
+                  fillColor: Colors.white,
+                  filled: true,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  border: OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xff0367BD),
+                        width: 1.4,
+                      )
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.green, width: 0.5),
+                  ),
+                ),
+                onSaved: (data){
+                  _postDescription = data;
+                },
+                onFieldSubmitted: (term) {
+                  _postDescription = term;
+                  _focusNodePostDescription.unfocus();
+                  FocusScope.of(context).requestFocus(FocusNode());
+                },
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 10, top: 5),
+                child: Text('Not: İlan açıklaması en az 30 kelime olmalıdır', style: TextStyle(color: Colors.white),),
+              ),
+              SizedBox(height: 20),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey[800],
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(10))
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(left: 10, top: 8, bottom: 8),
+                          child: Text('En etkili başlığı ve açıklamayı nasıl yazabilirim?', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 15),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              softWrap: false),
+                        ),
+                        Container(
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width,
+                          height: 1,
+                          color: Colors.grey[800],
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 5),
+                            child: SingleChildScrollView(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                child: Text(_termsText, style: TextStyle(color: Colors.white),),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       );
     }
   }
+
+
+  String _termsText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce non aliquam nisi, eget fermentum tellus. Nullam faucibus, orci ullamcorper auctor ultricies, sapien eros posuere magna, a iaculis enim tellus a tortor. Sed egestas vel nibh nec faucibus. Nulla tincidunt imperdiet consequat. Nulla facilisi. Fusce eget elit quis dolor aliquam ultrices at ut dolor. Curabitur vulputate vel orci vitae gravida. Vestibulum arcu quam, varius et tempor in, tristique sit amet nibh.Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed mi mauris, lacinia ac dignissim in, semper non lectus. In ullamcorper eros sodales blandit pharetra. Morbi rhoncus lobortis mi non varius. Praesent at sagittis arcu, in iaculis libero. Phasellus auctor ipsum eu justo sodales molestie. Suspendisse dignissim, augue nec tincidunt viverra, massa lectus laoreet sem, vitae scelerisque mi urna in justo. Proin a est iaculis, luctus tortor non, dapibus ligula. Suspendisse ultrices, ipsum a varius maximus, odio tellus molestie risus, a gravida metus ligula non orci.Duis suscipit, odio id tincidunt rutrum, lacus sem scelerisque lacus, at mattis libero nulla vitae justo. Etiam venenatis dolor enim. Curabitur quis dui nec neque laoreet bibendum rutrum sit amet mi. Ut vestibulum sapien sed ante cursus, quis consectetur arcu eleifend. Curabitur aliquet ligula id posuere porta. Sed aliquet orci in ante vestibulum, sit amet porttitor dolor ullamcorper. Integer nec nibh in neque rutrum accumsan. Morbi vulputate massa ex, id aliquam velit semper non. Aliquam mattis arcu ut libero tempor, sit amet euismod turpis dapibus. Phasellus diam ex, tempor congue sodales eu, fringilla ut orci. Ut hendrerit, ante a viverra porta, nulla augue interdum risus, at iaculis tortor orci id ipsum. Fusce quis laoreet elit, a suscipit velit. Sed ipsum justo, lacinia at dignissim vitae, accumsan nec sem. Quisque eget varius leo, eu iaculis quam. Quisque sodales lectus at nulla.';
+
+  CameraPosition _initialCameraPosition = CameraPosition(
+      target: LatLng(38.73222, 35.48528),
+    zoom: 12
+  );
 
 
   String _boolDropdownResult2String(int value) {

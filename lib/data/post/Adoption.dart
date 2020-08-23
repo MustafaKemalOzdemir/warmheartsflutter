@@ -8,6 +8,7 @@ class Adoption extends Object{
   String date;
   String title;
   String description;
+  String name;
   int castrated;
   String type;
   String race;
@@ -21,7 +22,7 @@ class Adoption extends Object{
   num latitude;
   num longitude;
   List<String> images;
-  Adoption(this.ownerId, this.postId, this.date, this.title, this.description, this.castrated, this.type, this.race, this.gender,
+  Adoption(this.ownerId, this.postId, this.date, this.title, this.description, this.name, this.castrated, this.type, this.race, this.gender,
       this.age, this.source, this.regularVaccine, this.city, this.town, this.addressDetail, this.latitude, this.longitude, this.images);
   factory Adoption.fromJson(Map<String, dynamic> json) => _$AdoptionFromJson(json);
 }

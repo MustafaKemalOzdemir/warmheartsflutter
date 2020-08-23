@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:warm_hearts_flutter/constants/StaticObjects.dart';
 import 'package:warm_hearts_flutter/data/animal_category/AnimalCategory.dart';
@@ -118,7 +119,7 @@ class CallManager{
     return budu;
   }
 
-  Future<Adoption> createAdoptionPost({String animalName, String animalType, String animalRace, String gender, String age, int regularVaccine, int castrated, String source, String city, String town, String addressDetail, String postTitle, String postDescription,  List<File> images}) async{
+  Future<Adoption> createAdoptionPost({String animalName, String animalType, String animalRace, String gender, String age, int regularVaccine, int castrated, String source, String city, String town, String addressDetail, String postTitle, String postDescription, LatLng position, List<File> images}) async{
     Completer callCompleter = Completer<Adoption>();
     Timer timeOut = Timer(_timeOut, (){
       callCompleter.complete(null);
@@ -143,8 +144,8 @@ class CallManager{
     adoptionBody['title'] = postTitle;
     adoptionBody['description'] = postDescription;
     adoptionBody['addressDetail'] = addressDetail;
-    adoptionBody['latitude'] = 0.0;
-    adoptionBody['longitude'] = 0.0;
+    adoptionBody['latitude'] = position.latitude ?? 0.0;
+    adoptionBody['longitude'] = position.longitude ?? 0.0;
 
     callBody['token'] = StaticObjects.accessToken;
     callBody['email'] = StaticObjects.userData.email;
@@ -177,7 +178,7 @@ class CallManager{
     return callCompleter.future;
   }
 
-  Future<Adoption> createMissingPost({String missingDate, int collar, String animalName, String animalType, String animalRace, String gender, String age, int regularVaccine, int castrated, String source, String city, String town, String addressDetail, String postTitle, String postDescription,  List<File> images}) async{
+  Future<Adoption> createMissingPost({String missingDate, int collar, String animalName, String animalType, String animalRace, String gender, String age, int regularVaccine, int castrated, String source, String city, String town, String addressDetail, String postTitle, String postDescription, LatLng position, List<File> images}) async{
     Completer callCompleter = Completer<Adoption>();
     Timer timeOut = Timer(_timeOut, (){
       callCompleter.complete(null);
@@ -204,8 +205,8 @@ class CallManager{
     missingBody['title'] = postTitle;
     missingBody['description'] = postDescription;
     missingBody['addressDetail'] = addressDetail;
-    missingBody['latitude'] = 0.0;
-    missingBody['longitude'] = 0.0;
+    missingBody['latitude'] = position.latitude ?? 0.0;
+    missingBody['longitude'] = position.longitude ?? 0.0;
 
     callBody['token'] = StaticObjects.accessToken;
     callBody['email'] = StaticObjects.userData.email;
@@ -238,7 +239,7 @@ class CallManager{
     return callCompleter.future;
   }
 
-  Future<Adoption> createMatingPost({int heat, String animalName, String animalType, String animalRace, String gender, String age, int regularVaccine, int castrated, String source, String city, String town, String addressDetail, String postTitle, String postDescription,  List<File> images}) async{
+  Future<Adoption> createMatingPost({int heat, String animalName, String animalType, String animalRace, String gender, String age, int regularVaccine, int castrated, String source, String city, String town, String addressDetail, String postTitle, String postDescription, LatLng position, List<File> images}) async{
     Completer callCompleter = Completer<Adoption>();
     Timer timeOut = Timer(_timeOut, (){
       callCompleter.complete(null);
@@ -264,8 +265,8 @@ class CallManager{
     matingBody['title'] = postTitle;
     matingBody['description'] = postDescription;
     matingBody['addressDetail'] = addressDetail;
-    matingBody['latitude'] = 0.0;
-    matingBody['longitude'] = 0.0;
+    matingBody['latitude'] = position.latitude ?? 0.0;
+    matingBody['longitude'] = position.longitude ?? 0.0;
 
     callBody['token'] = StaticObjects.accessToken;
     callBody['email'] = StaticObjects.userData.email;

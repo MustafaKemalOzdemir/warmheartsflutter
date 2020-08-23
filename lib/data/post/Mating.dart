@@ -8,6 +8,7 @@ class Mating extends Object{
   String date;
   String title;
   String description;
+  String name;
   int castrated;
   String type;
   String race;
@@ -20,9 +21,9 @@ class Mating extends Object{
   String addressDetail;
   num latitude;
   num longitude;
-  bool heat;
+  int heat;
   List<String> images;
-  Mating(this.ownerId, this.postId, this.date, this.title, this.description, this.castrated, this.type, this.race, this.gender,
+  Mating(this.ownerId, this.postId, this.date, this.title, this.description, this.name, this.castrated, this.type, this.race, this.gender,
       this.age, this.source, this.regularVaccine, this.city, this.town, this.addressDetail, this.latitude, this.longitude, this.heat, this.images);
   factory Mating.fromJson(Map<String, dynamic> json) => _$MatingFromJson(json);
 }

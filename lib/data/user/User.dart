@@ -8,8 +8,9 @@ class User extends Object{
   String email;
   String password;
   String accessToken;
+  String phone;
   List<String> posts;
-  User(this.userId, this.name, this.surName, this.email, this.password, this.accessToken, this.posts);
+  User(this.userId, this.name, this.surName, this.email, this.password, this.accessToken, this.posts, this.phone);
   factory User.fromJson(Map<String, dynamic> json) =>
       _$UserFromJson(json);
 
