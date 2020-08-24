@@ -1,6 +1,9 @@
 
 import 'package:warm_hearts_flutter/data/animal_category/AnimalCategory.dart';
 import 'package:warm_hearts_flutter/data/city/CityItem.dart';
+import 'package:warm_hearts_flutter/data/post/Adoption.dart';
+import 'package:warm_hearts_flutter/data/post/Mating.dart';
+import 'package:warm_hearts_flutter/data/post/Missing.dart';
 import 'package:warm_hearts_flutter/data/user/User.dart';
 
 class StaticObjects{
@@ -15,5 +18,8 @@ class StaticObjects{
 
   static List<AnimalCategory> animalCategoryList = List();
   static List<CityItem> cityList = List();
+  static List<Adoption> adoptionList = List();
+  static List<Missing> missingList = List();
+  static List<Mating> matingList = List();
 
 }

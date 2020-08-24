@@ -8,6 +8,7 @@ class Missing extends Object{
   String date;
   String title;
   String description;
+  @JsonKey(name: 'animalName')
   String name;
   int castrated;
   String type;

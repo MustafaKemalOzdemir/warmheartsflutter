@@ -463,6 +463,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                           child: Text('İlan paylaş', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 15)),
                         ),
                         onTap: () {
+
                           if (widget.postMode == 0) {
                             _callManager.createAdoptionPost(
                                 postTitle: _postTitle,

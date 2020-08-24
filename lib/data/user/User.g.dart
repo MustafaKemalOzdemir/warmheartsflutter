@@ -26,6 +26,6 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'email': instance.email,
       'password': instance.password,
       'accessToken': instance.accessToken,
-      'posts': instance.posts,
       'phone': instance.phone,
+      'posts': instance.posts,
     };

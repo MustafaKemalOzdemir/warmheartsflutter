@@ -35,6 +35,27 @@ class _SplashScreenState extends State<SplashScreen> {
       _dataCount++;
     });
 
+    _callManager.getAdoption().then((value){
+      if(value != null){
+        StaticObjects.adoptionList = value;
+      }
+      _dataCount++;
+    });
+
+    _callManager.getMissing().then((value){
+      if(value != null){
+        StaticObjects.missingList = value;
+      }
+      _dataCount++;
+    });
+
+    _callManager.getMating().then((value){
+      if(value != null){
+        StaticObjects.matingList = value;
+      }
+      _dataCount++;
+    });
+
     _dataManager.readUser().then((value){
       if(value != null){
         StaticObjects.userData = value;
@@ -47,7 +68,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void dataCheck(){
-    if(_dataCount == 3){
+    if(_dataCount == 6){
       Navigator.of(context).pushReplacement(PageTransition(child: BottomNavigationPage(), type: PageTransitionType.rightToLeft));
     }else{
       Future.delayed(Duration(milliseconds: 100), (){

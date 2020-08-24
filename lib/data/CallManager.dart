@@ -11,9 +11,13 @@ import 'package:warm_hearts_flutter/data/animal_category/AnimalCategoryModel.dar
 import 'package:warm_hearts_flutter/data/city/CityModel.dart';
 import 'package:warm_hearts_flutter/data/post/Adoption.dart';
 import 'package:warm_hearts_flutter/data/post/AdoptionModel.dart';
+import 'package:warm_hearts_flutter/data/post/AdoptionResponse.dart';
+import 'package:warm_hearts_flutter/data/post/Mating.dart';
 import 'package:warm_hearts_flutter/data/post/MatingModel.dart';
+import 'package:warm_hearts_flutter/data/post/MatingResponse.dart';
 import 'package:warm_hearts_flutter/data/post/Missing.dart';
 import 'package:warm_hearts_flutter/data/post/MissingModel.dart';
+import 'package:warm_hearts_flutter/data/post/MissingResponse.dart';
 import 'dart:convert';
 import 'package:warm_hearts_flutter/data/user/UserModel.dart';
 
@@ -95,28 +99,37 @@ class CallManager{
   Future<List<Missing>> getMissing() async{
     String url = 'http://$_localIpAddress:$_port/posts/missing';
     http.Response response = await http.get(url);
-    Map<String, dynamic> decodedBody =  json.decode(response.body);
-    List<Missing> missingList = List();
+    var decodedBody =  json.decode(response.body);
     if(decodedBody['Success'] as bool == true){
-      for(dynamic e in (decodedBody['result'] as List)){
-        missingList.add(Missing.fromJson(e));
-      }
+      MissingResponse missingResponse = MissingResponse.fromJson(decodedBody);
+      return missingResponse.misings;
+    }else{
+      return null;
     }
-    return missingList;
   }
 
-  Future<String> getMating() async{
-    String url = 'http://$_localIpAddress:$_port/posts/missing';
+  Future<List<Mating>> getMating() async{
+    String url = 'http://$_localIpAddress:$_port/posts/mating';
     http.Response response = await http.get(url);
-    String budu =  response.body;
-    return budu;
+    var decodedBody =  json.decode(response.body);
+    if(decodedBody['Success'] as bool == true){
+      MatingResponse matingResponse = MatingResponse.fromJson(decodedBody);
+      return matingResponse.matings;
+    }else{
+      return null;
+    }
   }
 
-  Future<String> getAdoption() async{
-    String url = 'http://$_localIpAddress:$_port/posts/missing';
+  Future<List<Adoption>> getAdoption() async{
+    String url = 'http://$_localIpAddress:$_port/posts/adoption';
     http.Response response = await http.get(url);
-    String budu =  response.body;
-    return budu;
+    var decodedBody =  json.decode(response.body);
+    if(decodedBody['Success'] as bool == true){
+      AdoptionResponse adoptionResponse = AdoptionResponse.fromJson(decodedBody);
+      return adoptionResponse.adoptions;
+    }else{
+      return null;
+    }
   }
 
   Future<Adoption> createAdoptionPost({String animalName, String animalType, String animalRace, String gender, String age, int regularVaccine, int castrated, String source, String city, String town, String addressDetail, String postTitle, String postDescription, LatLng position, List<File> images}) async{
@@ -183,7 +196,7 @@ class CallManager{
     Timer timeOut = Timer(_timeOut, (){
       callCompleter.complete(null);
     });
-    String url = 'http://$_localIpAddress:$_port/posts/adoption';
+    String url = 'http://$_localIpAddress:$_port/posts/missing';
     Map<String, dynamic> callBody = Map();
     Map<String, dynamic> missingBody = Map();
     missingBody['ownerId'] = StaticObjects.userData.userId;
@@ -244,7 +257,7 @@ class CallManager{
     Timer timeOut = Timer(_timeOut, (){
       callCompleter.complete(null);
     });
-    String url = 'http://$_localIpAddress:$_port/posts/adoption';
+    String url = 'http://$_localIpAddress:$_port/posts/mating';
     Map<String, dynamic> callBody = Map();
     Map<String, dynamic> matingBody = Map();
     matingBody['ownerId'] = StaticObjects.userData.userId;
