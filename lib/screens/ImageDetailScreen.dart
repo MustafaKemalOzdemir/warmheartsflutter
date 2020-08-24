@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:warm_hearts_flutter/data/CallManager.dart';
 
 class ImageDetailScreen extends StatefulWidget {
   final bool preview;
@@ -17,6 +18,7 @@ class ImageDetailScreen extends StatefulWidget {
 }
 
 class _ImageDetailScreenState extends State<ImageDetailScreen> {
+  CallManager _callManager = CallManager();
   PageController _controller;
   int currentPage;
 
@@ -63,8 +65,7 @@ class _ImageDetailScreenState extends State<ImageDetailScreen> {
                       builder: (BuildContext context, int index) {
                         return PhotoViewGalleryPageOptions(
                             imageProvider: widget.preview ? FileImage(widget.fileImages[index]) :
-                                //todo fix here
-                            NetworkImage(widget.urlImages[index]),
+                            NetworkImage(_callManager.getImageUrl(widget.urlImages[index])),
                             initialScale: PhotoViewComputedScale.contained * 0.8,
                             minScale: PhotoViewComputedScale.contained * 0.6,
                             maxScale: PhotoViewComputedScale.contained * 5,
@@ -78,7 +79,7 @@ class _ImageDetailScreenState extends State<ImageDetailScreen> {
                         );
                       },
                       backgroundDecoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Colors.transparent
                       ),
                       pageController: _controller,
                       onPageChanged: (index){
@@ -95,7 +96,7 @@ class _ImageDetailScreenState extends State<ImageDetailScreen> {
                 child: Row(
                   children: <Widget>[
                     IconButton(
-                      icon: Platform.isIOS ? Icon(Icons.arrow_back_ios,  color: Colors.black,) : Icon(Icons.arrow_back, color: Colors.black),
+                      icon: Platform.isIOS ? Icon(Icons.arrow_back_ios,  color: Colors.white,) : Icon(Icons.arrow_back, color: Colors.white),
                       onPressed: () => Navigator.of(context).pop(),
                     )
                   ],

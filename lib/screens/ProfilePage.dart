@@ -29,18 +29,18 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   SizedBox(height: 20),
                   Text(
-                    'My Profile',
+                    'Profilim',
                     style: TextStyle(color: Colors.grey[700], fontWeight: FontWeight.w700, fontSize: 16),
                   ),
                   SizedBox(height: 5),
-                  Text('Please login the system to access your profile', style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.w500)),
+                  Text('Profilinize ulaşmak için lütfen giriş yapın', style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.w500)),
                   SizedBox(height: 15),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.65,
                     height: 35,
                     child: FlatButton(
                       color: Color(0xFF0367BD),
-                      child: Text('Sign In', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),),
+                      child: Text('Giriş Yap', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),),
                       onPressed: () {
                         Navigator.of(context).push(PageTransition(child: TabLoginPage(modeOverlay: true,), type: PageTransitionType.rightToLeft)).then((value){
                           setState(() {

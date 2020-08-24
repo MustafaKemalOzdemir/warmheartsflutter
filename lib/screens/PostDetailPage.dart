@@ -3,14 +3,18 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:warm_hearts_flutter/constants/StaticObjects.dart';
 import 'package:warm_hearts_flutter/custom_widgets/AnimalDetailListTile.dart';
 import 'package:warm_hearts_flutter/data/CallManager.dart';
 import 'package:warm_hearts_flutter/data/post/Adoption.dart';
 import 'package:warm_hearts_flutter/data/post/Mating.dart';
 import 'package:warm_hearts_flutter/data/post/Missing.dart';
+import 'package:warm_hearts_flutter/data/user/User.dart';
+import 'package:warm_hearts_flutter/screens/BottomNavigationPage.dart';
 import 'package:warm_hearts_flutter/screens/ImageDetailScreen.dart';
 
 class PostDetailPage extends StatefulWidget {
@@ -31,6 +35,8 @@ class _PostDetailPageState extends State<PostDetailPage> {
   CallManager _callManager = CallManager();
   List<String> _imageList = List();
   List<Marker> _markers = <Marker>[];
+  User _user;
+  bool _userDone = false;
   int carouselIndex = 0;
   String _postTitle;
   String _postDescription;
@@ -65,6 +71,41 @@ class _PostDetailPageState extends State<PostDetailPage> {
   @override
   void initState() {
     super.initState();
+    if(widget.preview == false){
+      if(widget.postMode == 0){
+        _callManager.getUser(widget.adoption.ownerId).then((value){
+          if(value == null){
+            return;
+          }
+          setState(() {
+            _user = value;
+            _userDone = true;
+          });
+        });
+      }
+      if(widget.postMode == 1){
+        _callManager.getUser(widget.missing.ownerId).then((value){
+          if(value == null){
+            return;
+          }
+          setState(() {
+            _user = value;
+            _userDone = true;
+          });
+        });
+      }
+      if(widget.postMode == 2){
+        _callManager.getUser(widget.mating.ownerId).then((value){
+          if(value == null){
+            return;
+          }
+          setState(() {
+            _user = value;
+            _userDone = true;
+          });
+        });
+      }
+    }
     if (widget.postMode == 0) {
       _postTitle = widget.adoption.title;
       _postDescription = widget.adoption.description;
@@ -201,7 +242,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                         return SizedBox(
                                           width: MediaQuery.of(context).size.width - 20,
                                           height: 300,
-                                          child: widget.preview ? Image.file(widget.imageList[index], fit: BoxFit.contain) : Container(), //todo complete here
+                                          child: widget.preview ? Image.file(widget.imageList[index], fit: BoxFit.contain) : Image.network(_callManager.getImageUrl(_imageList[index]), fit: BoxFit.contain),
                                         );
                                       },
                                       options: CarouselOptions(
@@ -263,21 +304,44 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                   child: Text('İlan sahibi bilgileri:', style: TextStyle(color: Colors.grey[900], fontWeight: FontWeight.w600, fontSize: 15),),
                                 ),
                                 SizedBox(height: 5),
-                                AnimalDetailListTile(
-                                  leadingText: 'Adı-Soyadı',
-                                  trailingText: '${StaticObjects.userData.name ?? 'Guest'} ${StaticObjects.userData.surName ?? ''}',
-                                ),
-                                SizedBox(height: 4),
-                                AnimalDetailListTile(
-                                  leadingText: 'E-Mail',
-                                  trailingText: '${StaticObjects.userData.email ?? '----'}',
-                                ),
-                                SizedBox(height: 4),
-                                AnimalDetailListTile(
-                                  leadingText: 'Telefon Numarası',
-                                  trailingText: '${StaticObjects.userData.phone ?? '----'}',
-                                ),
-                                SizedBox(height: 4)
+                                widget.preview ? Column(
+                                  children: <Widget>[
+                                    AnimalDetailListTile(
+                                      leadingText: 'Adı-Soyadı',
+                                      trailingText: '${StaticObjects.userData.name ?? 'Guest'} ${StaticObjects.userData.surName ?? ''}',
+                                    ),
+                                    SizedBox(height: 4),
+                                    AnimalDetailListTile(
+                                      leadingText: 'E-Mail',
+                                      trailingText: '${StaticObjects.userData.email ?? '----'}',
+                                    ),
+                                    SizedBox(height: 4),
+                                    AnimalDetailListTile(
+                                      leadingText: 'Telefon Numarası',
+                                      trailingText: '${StaticObjects.userData.phone ?? '----'}',
+                                    ),
+                                    SizedBox(height: 4)
+                                  ],
+                                ) : Column(
+                                  children: <Widget>[
+                                    AnimalDetailListTile(
+                                      leadingText: 'Adı-Soyadı',
+                                      trailingText: _userDone ? ('${_user.name ?? 'Guest'} ${_user.surName ?? ''}') : '',
+                                    ),
+                                    SizedBox(height: 4),
+                                    AnimalDetailListTile(
+                                      leadingText: 'E-Mail',
+                                      trailingText: _userDone ? ('${_user.email ?? '----'}') : '',
+                                    ),
+                                    SizedBox(height: 4),
+                                    AnimalDetailListTile(
+                                      leadingText: 'Telefon Numarası',
+                                      trailingText: _userDone ? ('${_user.phone ?? '----'}') : '',
+                                    ),
+                                    SizedBox(height: 4)
+                                  ],
+                                )
+
                               ],
                             ),
                           ),
@@ -423,7 +487,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                 mapType: MapType.normal,
                                 initialCameraPosition:  CameraPosition(
                                     target: _selectedPosition,
-                                    zoom: 12
+                                    zoom: 14
                                 ),
                                 markers: Set<Marker>.of(_markers),
                                 onMapCreated: (GoogleMapController controller) {
@@ -463,6 +527,20 @@ class _PostDetailPageState extends State<PostDetailPage> {
                           child: Text('İlan paylaş', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 15)),
                         ),
                         onTap: () {
+                          final ProgressDialog pr = ProgressDialog(context);
+                          pr.style(
+                              message: 'Lütfen bekleyin',
+                              borderRadius: 10.0,
+                              backgroundColor: Colors.white,
+                              progressWidget: CircularProgressIndicator(),
+                              elevation: 10.0,
+                              insetAnimCurve: Curves.easeInOut,
+                              progressTextStyle: TextStyle(
+                                  color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+                              messageTextStyle: TextStyle(
+                                  color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600)
+                          );
+                          pr.show();
 
                           if (widget.postMode == 0) {
                             _callManager.createAdoptionPost(
@@ -480,7 +558,16 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                 castrated: _castrated,
                                 city: _city,
                                 town: _town,
-                                addressDetail: _addressDetail);
+                                addressDetail: _addressDetail).then((value){
+                                  if(value != null){
+                                    pr.hide();
+                                    Fluttertoast.showToast(msg: 'İlan başarıyla paylaşıldı');
+                                    Navigator.of(context).pushAndRemoveUntil(PageTransition(child: BottomNavigationPage(), type: PageTransitionType.rightToLeft), (route) => false);
+                                  }else{
+                                    pr.hide();
+                                    Fluttertoast.showToast(msg: 'İlan paylaşırken bir hata meydana geldi');
+                                  }
+                            });
                           } else if (widget.postMode == 1) {
                             _callManager.createMissingPost(
                                 collar: _collar,
@@ -499,7 +586,16 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                 castrated: _castrated,
                                 city: _city,
                                 town: _town,
-                                addressDetail: _addressDetail);
+                                addressDetail: _addressDetail).then((value){
+                              if(value != null){
+                                pr.hide();
+                                Fluttertoast.showToast(msg: 'İlan başarıyla paylaşıldı');
+                                Navigator.of(context).pushAndRemoveUntil(PageTransition(child: BottomNavigationPage(), type: PageTransitionType.rightToLeft), (route) => false);
+                              }else{
+                                pr.hide();
+                                Fluttertoast.showToast(msg: 'İlan paylaşırken bir hata meydana geldi');
+                              }
+                            });
                           } else if (widget.postMode == 2) {
                             _callManager.createMatingPost(
                                 heat: _heat,
@@ -517,7 +613,16 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                 castrated: _castrated,
                                 city: _city,
                                 town: _town,
-                                addressDetail: _addressDetail);
+                                addressDetail: _addressDetail).then((value){
+                              if(value != null){
+                                pr.hide();
+                                Fluttertoast.showToast(msg: 'İlan başarıyla paylaşıldı');
+                                Navigator.of(context).pushAndRemoveUntil(PageTransition(child: BottomNavigationPage(), type: PageTransitionType.rightToLeft), (route) => false);
+                              }else{
+                                pr.hide();
+                                Fluttertoast.showToast(msg: 'İlan paylaşırken bir hata meydana geldi');
+                              }
+                            });
                           }
                         },
                       ),
@@ -526,7 +631,6 @@ class _PostDetailPageState extends State<PostDetailPage> {
                   ):
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        //mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
                           Spacer(),
                           GestureDetector(
@@ -538,6 +642,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
                               ),
                               child: Text('İlan Sahibini Ara', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 15)),
                             ),
+                            onTap: (){
+                              Fluttertoast.showToast(msg: 'Bu özellik şuan aktif değil');
+                            },
                           ),
                           SizedBox(width: 30),
                         ],

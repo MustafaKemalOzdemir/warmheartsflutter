@@ -193,7 +193,7 @@ class _TabLoginPageState extends State<TabLoginPage> {
                         Padding(
                           padding: const EdgeInsets.only(left: 5),
                           child: Text(
-                            'Password',
+                            'Şifre',
                             style: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.w500),
                           ),
                         ),
@@ -280,7 +280,7 @@ class _TabLoginPageState extends State<TabLoginPage> {
                               height: 35,
                               decoration: BoxDecoration(color: Color(0xFFfe5f75), borderRadius: BorderRadius.all(Radius.circular(20))),
                               child: Center(
-                                child: loginState == 0 ? Text(_loginMode == 0 ? 'Sign in' : 'Sign me up!', style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white)) :
+                                child: loginState == 0 ? Text(_loginMode == 0 ? 'Giriş Yap' : 'Kayıt Ol!', style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white)) :
                               SpinKitThreeBounce(
                                 color: Colors.white,
                                 duration: Duration(milliseconds: 500),
@@ -361,7 +361,7 @@ class _TabLoginPageState extends State<TabLoginPage> {
       return true;
     } else {
       setState(() {
-        emailErrorText = 'Please enter valid E-Mail!';
+        emailErrorText = 'Lütfen geçerli bir e-mail girin!';
       });
       return false;
     }
@@ -370,13 +370,13 @@ class _TabLoginPageState extends State<TabLoginPage> {
   bool _validatePassword(String text) {
     if (text.length == 0) {
       setState(() {
-        passwordErrorText = 'Password field can\'t be empty!';
+        passwordErrorText = 'Şifre alanı boş olamaz!';
       });
       return false;
     }
     if (text.length < 6 || text.length > 18) {
       setState(() {
-        passwordErrorText = 'Password length must be between 6-18!';
+        passwordErrorText = 'Şifre uzunluğu 6-18 karakter arasında olmalıdır!';
         return;
       });
       return false;

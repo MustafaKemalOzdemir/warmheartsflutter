@@ -18,6 +18,7 @@ import 'package:warm_hearts_flutter/data/post/MatingResponse.dart';
 import 'package:warm_hearts_flutter/data/post/Missing.dart';
 import 'package:warm_hearts_flutter/data/post/MissingModel.dart';
 import 'package:warm_hearts_flutter/data/post/MissingResponse.dart';
+import 'package:warm_hearts_flutter/data/user/User.dart';
 import 'dart:convert';
 import 'package:warm_hearts_flutter/data/user/UserModel.dart';
 
@@ -29,6 +30,10 @@ class CallManager{
   final Duration _timeOut = Duration(seconds: 15);
   String appSecret = 'VSDF8-ASD78-RTLOP-66FDS-RT437';
   String appKey = '12364900746';
+
+  String getImageUrl(String trailing){
+    return 'http://$_localIpAddress:$_port/images/$trailing';
+  }
 
   Future<UserModel> signIn({@required String email, @required String password}) async{
     String url = 'http://$_localIpAddress:$_port/users/signin';
@@ -81,11 +86,16 @@ class CallManager{
     return animalCategoryModel.animalData;
   }
 
-  Future<String> getUsers() async{
-    String url = 'http://$_localIpAddress:$_port/users';
+  Future<User> getUser(String id) async{
+    String url = 'http://$_localIpAddress:$_port/users/$id';
     http.Response response = await http.get(url);
     String budu = response.body;
-    return response.body;
+    var decodedBody = json.decode(response.body);
+    if(decodedBody['success'] as bool ?? false){
+        return User.fromJson(decodedBody['result']);
+    }else{
+      return null;
+    }
   }
 
   Future<List<CityItem>> getCities() async {
@@ -183,7 +193,7 @@ class CallManager{
       var decodedBody = json.decode(event);
       if(decodedBody['success'] as bool){
         AdoptionModel adoptionModel = AdoptionModel.fromJson(decodedBody);
-        callCompleter.complete(adoptionModel);
+        callCompleter.complete(adoptionModel.adoption);
       } else{
         callCompleter.complete(null);
       }
@@ -191,8 +201,8 @@ class CallManager{
     return callCompleter.future;
   }
 
-  Future<Adoption> createMissingPost({String missingDate, int collar, String animalName, String animalType, String animalRace, String gender, String age, int regularVaccine, int castrated, String source, String city, String town, String addressDetail, String postTitle, String postDescription, LatLng position, List<File> images}) async{
-    Completer callCompleter = Completer<Adoption>();
+  Future<Missing> createMissingPost({String missingDate, int collar, String animalName, String animalType, String animalRace, String gender, String age, int regularVaccine, int castrated, String source, String city, String town, String addressDetail, String postTitle, String postDescription, LatLng position, List<File> images}) async{
+    Completer callCompleter = Completer<Missing>();
     Timer timeOut = Timer(_timeOut, (){
       callCompleter.complete(null);
     });
@@ -244,7 +254,7 @@ class CallManager{
       var decodedBody = json.decode(event);
       if(decodedBody['success'] as bool){
         MissingModel missingModel = MissingModel.fromJson(decodedBody);
-        callCompleter.complete(missingModel);
+        callCompleter.complete(missingModel.missing);
       }else{
         callCompleter.complete(null);
       }
@@ -252,8 +262,8 @@ class CallManager{
     return callCompleter.future;
   }
 
-  Future<Adoption> createMatingPost({int heat, String animalName, String animalType, String animalRace, String gender, String age, int regularVaccine, int castrated, String source, String city, String town, String addressDetail, String postTitle, String postDescription, LatLng position, List<File> images}) async{
-    Completer callCompleter = Completer<Adoption>();
+  Future<Mating> createMatingPost({int heat, String animalName, String animalType, String animalRace, String gender, String age, int regularVaccine, int castrated, String source, String city, String town, String addressDetail, String postTitle, String postDescription, LatLng position, List<File> images}) async{
+    Completer callCompleter = Completer<Mating>();
     Timer timeOut = Timer(_timeOut, (){
       callCompleter.complete(null);
     });
@@ -304,7 +314,7 @@ class CallManager{
       var decodedBody = json.decode(event);
       if(decodedBody['success'] as bool){
         MatingModel matingModel = MatingModel.fromJson(decodedBody);
-        callCompleter.complete(matingModel);
+        callCompleter.complete(matingModel.mating);
       }else{
         callCompleter.complete(null);
       }
