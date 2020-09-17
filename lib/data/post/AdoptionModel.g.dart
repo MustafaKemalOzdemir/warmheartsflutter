@@ -1,25 +1,24 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'UserModel.dart';
+part of 'AdoptionModel.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-UserModel _$UserModelFromJson(Map<String, dynamic> json) {
-  return UserModel(
+AdoptionModel _$AdoptionModelFromJson(Map<String, dynamic> json) {
+  return AdoptionModel(
     json['success'] as bool,
     json['message'] as String,
-    json['token'] as String,
-    json['user'] == null
+    json['adoption'] == null
         ? null
-        : User.fromJson(json['user'] as Map<String, dynamic>),
+        : Adoption.fromJson(json['adoption'] as Map<String, dynamic>),
   );
 }
 
-Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
+Map<String, dynamic> _$AdoptionModelToJson(AdoptionModel instance) =>
+    <String, dynamic>{
       'success': instance.success,
       'message': instance.message,
-      'token': instance.token,
-      'user': instance.user,
+      'adoption': instance.adoption,
     };

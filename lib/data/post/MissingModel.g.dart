@@ -1,25 +1,24 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'UserModel.dart';
+part of 'MissingModel.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-UserModel _$UserModelFromJson(Map<String, dynamic> json) {
-  return UserModel(
+MissingModel _$MissingModelFromJson(Map<String, dynamic> json) {
+  return MissingModel(
     json['success'] as bool,
     json['message'] as String,
-    json['token'] as String,
-    json['user'] == null
+    json['missing'] == null
         ? null
-        : User.fromJson(json['user'] as Map<String, dynamic>),
+        : Missing.fromJson(json['missing'] as Map<String, dynamic>),
   );
 }
 
-Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
+Map<String, dynamic> _$MissingModelToJson(MissingModel instance) =>
+    <String, dynamic>{
       'success': instance.success,
       'message': instance.message,
-      'token': instance.token,
-      'user': instance.user,
+      'missing': instance.missing,
     };

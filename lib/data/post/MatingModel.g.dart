@@ -1,25 +1,24 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'UserModel.dart';
+part of 'MatingModel.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-UserModel _$UserModelFromJson(Map<String, dynamic> json) {
-  return UserModel(
+MatingModel _$MatingModelFromJson(Map<String, dynamic> json) {
+  return MatingModel(
     json['success'] as bool,
     json['message'] as String,
-    json['token'] as String,
-    json['user'] == null
+    json['mating'] == null
         ? null
-        : User.fromJson(json['user'] as Map<String, dynamic>),
+        : Mating.fromJson(json['mating'] as Map<String, dynamic>),
   );
 }
 
-Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
+Map<String, dynamic> _$MatingModelToJson(MatingModel instance) =>
+    <String, dynamic>{
       'success': instance.success,
       'message': instance.message,
-      'token': instance.token,
-      'user': instance.user,
+      'mating': instance.mating,
     };

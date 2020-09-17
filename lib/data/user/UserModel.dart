@@ -6,8 +6,9 @@ part 'UserModel.g.dart';
 class UserModel extends Object{
   bool success;
   String message;
+  String token;
   User user;
-  UserModel(this.success, this.message, this.user);
+  UserModel(this.success, this.message, this.token, this.user);
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);
 
