@@ -247,28 +247,19 @@ class _HomePageState extends State<HomePage> {
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: <Widget>[
+                                        SizedBox(width: 10),
                                         SizedBox(
+                                          height: 80,
                                           width: 100,
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: <Widget>[
-                                              SizedBox(width: 5),
-                                              SizedBox(
-                                                height: 80,
-                                                child: ClipRRect(
-                                                  borderRadius: BorderRadius.circular(10),
-                                                  child: Image.network(
-                                                    _callManager.getImageUrl(StaticObjects.adoptionList[index].images.first),
-                                                    fit: BoxFit.contain,
-                                                    height: 80,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(width: 10),
-                                            ],
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(10),
+                                            child: Image.network(
+                                              _callManager.getImageUrl(StaticObjects.adoptionList[index].images.first),
+                                              fit: BoxFit.fitHeight,
+                                            ),
                                           ),
                                         ),
+                                        SizedBox(width: 10),
                                         Expanded(
                                           child: Column(
                                             mainAxisSize: MainAxisSize.max,
@@ -329,28 +320,19 @@ class _HomePageState extends State<HomePage> {
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: <Widget>[
+                                        SizedBox(width: 10),
                                         SizedBox(
+                                          height: 80,
                                           width: 100,
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: <Widget>[
-                                              SizedBox(width: 5),
-                                              SizedBox(
-                                                height: 80,
-                                                child: ClipRRect(
-                                                  borderRadius: BorderRadius.circular(10),
-                                                  child: Image.network(
-                                                    _callManager.getImageUrl(StaticObjects.missingList[index].images.first),
-                                                    fit: BoxFit.contain,
-                                                    height: 80,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(width: 10),
-                                            ],
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(10),
+                                            child: Image.network(
+                                              _callManager.getImageUrl(StaticObjects.missingList[index].images.first),
+                                              fit: BoxFit.fitHeight,
+                                            ),
                                           ),
                                         ),
+                                        SizedBox(width: 10),
                                         Expanded(
                                           child: Column(
                                             mainAxisSize: MainAxisSize.max,
@@ -411,28 +393,19 @@ class _HomePageState extends State<HomePage> {
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: <Widget>[
+                                        SizedBox(width: 10),
                                         SizedBox(
+                                          height: 80,
                                           width: 100,
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: <Widget>[
-                                              SizedBox(width: 5),
-                                              SizedBox(
-                                                height: 80,
-                                                child: ClipRRect(
-                                                  borderRadius: BorderRadius.circular(10),
-                                                  child: Image.network(
-                                                    _callManager.getImageUrl(StaticObjects.matingList[index].images.first),
-                                                    fit: BoxFit.contain,
-                                                    height: 80,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(width: 10),
-                                            ],
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(10),
+                                            child: Image.network(
+                                              _callManager.getImageUrl(StaticObjects.matingList[index].images.first),
+                                              fit: BoxFit.fitHeight,
+                                            ),
                                           ),
                                         ),
+                                        SizedBox(width: 10),
                                         Expanded(
                                           child: Column(
                                             mainAxisSize: MainAxisSize.max,

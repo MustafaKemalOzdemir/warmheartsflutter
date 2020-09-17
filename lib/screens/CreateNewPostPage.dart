@@ -996,7 +996,7 @@ class _CreateNewPostPageState extends State<CreateNewPostPage> {
                             child: SingleChildScrollView(
                               child: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                child: Text(_termsText, style: TextStyle(color: Colors.white),),
+                                child: Text(_suggestionText, style: TextStyle(color: Colors.white),),
                               ),
                             ),
                           ),
@@ -1013,9 +1013,7 @@ class _CreateNewPostPageState extends State<CreateNewPostPage> {
     }
   }
 
-
-  String _termsText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce non aliquam nisi, eget fermentum tellus. Nullam faucibus, orci ullamcorper auctor ultricies, sapien eros posuere magna, a iaculis enim tellus a tortor. Sed egestas vel nibh nec faucibus. Nulla tincidunt imperdiet consequat. Nulla facilisi. Fusce eget elit quis dolor aliquam ultrices at ut dolor. Curabitur vulputate vel orci vitae gravida. Vestibulum arcu quam, varius et tempor in, tristique sit amet nibh.Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed mi mauris, lacinia ac dignissim in, semper non lectus. In ullamcorper eros sodales blandit pharetra. Morbi rhoncus lobortis mi non varius. Praesent at sagittis arcu, in iaculis libero. Phasellus auctor ipsum eu justo sodales molestie. Suspendisse dignissim, augue nec tincidunt viverra, massa lectus laoreet sem, vitae scelerisque mi urna in justo. Proin a est iaculis, luctus tortor non, dapibus ligula. Suspendisse ultrices, ipsum a varius maximus, odio tellus molestie risus, a gravida metus ligula non orci.Duis suscipit, odio id tincidunt rutrum, lacus sem scelerisque lacus, at mattis libero nulla vitae justo. Etiam venenatis dolor enim. Curabitur quis dui nec neque laoreet bibendum rutrum sit amet mi. Ut vestibulum sapien sed ante cursus, quis consectetur arcu eleifend. Curabitur aliquet ligula id posuere porta. Sed aliquet orci in ante vestibulum, sit amet porttitor dolor ullamcorper. Integer nec nibh in neque rutrum accumsan. Morbi vulputate massa ex, id aliquam velit semper non. Aliquam mattis arcu ut libero tempor, sit amet euismod turpis dapibus. Phasellus diam ex, tempor congue sodales eu, fringilla ut orci. Ut hendrerit, ante a viverra porta, nulla augue interdum risus, at iaculis tortor orci id ipsum. Fusce quis laoreet elit, a suscipit velit. Sed ipsum justo, lacinia at dignissim vitae, accumsan nec sem. Quisque eget varius leo, eu iaculis quam. Quisque sodales lectus at nulla.';
-
+  String _suggestionText = 'Çiftleştirme, kayıp, ve sahiplendirme ilanlarında bu süreçler için zaman önemli bir unsurdur. Aynı zamanda ilgilenen kişilerin en çok dikkat ettiği kısım “İlan Açıklaması ve Başlık” kısmıdır. Bu yüzden bu süreçleri en kısa sürede gerçekleştirebilmek için ilan açıklaması ve başlık  kısmının titizlikle doldurulması sürecin hızlanmasına  ve sağlıklı bir şekilde ilerlemesine zemin hazırlar. Bu yüzden ilan açıklamasında ve başlıkta;İlan herkes tarafından anlaşılır olmalıdır.ilanın özellikleri, konum, lokasyon, yaş,cinsiyet ve ırkı gibi özelliklerin dopru bir şekilde belirtilmesi gerekir.Net olarak anlaşılması için gereksiz cümlelerden ve terimler kullanılmamalıdır.İlanla ilgili bilgiler güncel olmalıdır ve değişen durumlar en kısa sürede güncellenmelidir.ilan açıklaması ile paylaşılan fotoğraflar tutarlı olmalıdır.Şartlar net olarak belirtilmelidir unsurlarına dikkat edilmelidir.';
   CameraPosition _initialCameraPosition = CameraPosition(
       target: LatLng(38.73222, 35.48528),
     zoom: 12

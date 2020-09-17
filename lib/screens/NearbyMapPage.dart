@@ -114,7 +114,7 @@ class _NearbyMapPageState extends State<NearbyMapPage> {
       var marker = Marker(
           markerId: MarkerId('missing-$i'),
           icon: bitmapDescriptor,
-          position: LatLng(element.latitude + 0.02, element.longitude),
+          position: LatLng(element.latitude, element.longitude),
           onTap: () {
             Navigator.of(context).push(PageTransition(child: PostDetailPage(preview: false, postMode: 1, missing : element), type: PageTransitionType.rightToLeft));
           });
@@ -149,7 +149,7 @@ class _NearbyMapPageState extends State<NearbyMapPage> {
       var marker = Marker(
           markerId: MarkerId('mating-$i'),
           icon: bitmapDescriptor,
-          position: LatLng(element.latitude + 0.01, element.longitude),
+          position: LatLng(element.latitude, element.longitude),
           onTap: () {
             Navigator.of(context).push(PageTransition(child: PostDetailPage(preview: false, postMode: 2, mating : element), type: PageTransitionType.rightToLeft));
           });
